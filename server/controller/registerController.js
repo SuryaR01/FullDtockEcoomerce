@@ -1,30 +1,49 @@
 import Register from "../model/registerModel.js";
+import bcrypt from "bcryptjs";
 
 // ================================ POST METHOD (CREATE USER) =============================
 export const create = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, conformPassword } = req.body;
 
-    // Check for empty fields
-    if (!name || !email || !password) {
+    //  1. Validate inputs
+    if (!name || !email || !password || !conformPassword) {
       return res.status(400).json({ message: "All fields are required." });
     }
 
-    // Check if user already exists
+    // 2. Check if passwords match
+    if (password !== conformPassword) {
+      return res.status(400).json({ message: "Passwords do not match." });
+    }
+
+    // 3. Check if user already exists
     const userExist = await Register.findOne({ email: email.trim() });
     if (userExist) {
       return res.status(400).json({ message: "User already exists." });
     }
 
-    // Create and save new user
-    const newUser = new Register({ name, email, password });
+    // 4. Hash the password
+    const salt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash(password, salt);
+
+    // 5. Create new user with hashed password only
+    const newUser = new Register({
+      name,
+      email,
+      password: hashPassword, // store only hashed password
+    });
+
     await newUser.save();
 
     res.status(201).json({ message: "User created successfully!" });
   } catch (error) {
+    console.error("❌ Error in user registration:", error);
     res.status(500).json({ errorMessage: error.message });
   }
 };
+
+
+
 
 // ================================ GET ALL USERS =========================================
 export const getAllUsers = async (req, res) => {
@@ -86,3 +105,40 @@ export const deleteUser = async (req, res) => {
     res.status(500).json({ errorMessage: error.message });
   }
 };
+
+
+
+
+
+// router.post("/login",
+  
+  export const login  = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Check if user exists
+    const user = await Register.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found. Please register first!" });
+    }
+
+    // Compare password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid email or password." });
+    }
+
+    // ✅ Check if admin
+    const isAdmin = email === "suriya@gmail.com";
+
+    res.status(200).json({
+      message: isAdmin ? "Admin login successful!" : "Login successful!",
+      user: { email: user.email, name: user.name, isAdmin }
+    });
+
+  } catch (error) {
+    console.error("Login Error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+

@@ -13,6 +13,7 @@ const app = express();
 app.use(bodyParser.json());
 dotenv.config();
 app.use(cors())
+app.use(express.json())
 
 const PORT = process.env.PORT || 7000;
 const MANGOURL = process.env.MONGODB_URL;

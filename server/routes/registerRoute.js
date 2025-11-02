@@ -7,11 +7,13 @@ import {
   getUserById,
   update,
   deleteUser,
+  login,
 } from "../controller/registerController.js";
 
 const router = express.Router();
 
 router.post("/register", create);
+router.post("/login" , login)
 router.get("/registerAll", getAllUsers);
 router.get("/registerUsers/:id", getUserById);
 router.put("/updateRegister/:id", update);

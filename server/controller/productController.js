@@ -85,3 +85,26 @@ export const deleteProduct = async (req, res) => {
     res.status(500).json({ errorMessage: error.message });
   }
 };
+
+
+
+// 🧾 Get all products
+export const getAllProducts = async (req, res) => {
+  try {
+    const products = await Product.find(); 
+
+    if (products.length === 0) {
+      return res.status(200).json({
+        message: "No products found",
+        products: [],
+      });
+    }
+
+    res.status(200).json({
+      message: "Products fetched successfully",
+      products,
+    });
+  } catch (error) {
+    res.status(500).json({ errorMessage: error.message });
+  }
+};

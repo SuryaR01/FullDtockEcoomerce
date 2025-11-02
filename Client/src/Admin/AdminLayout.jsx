@@ -45,7 +45,7 @@ const AdminLayout = () => {
                 <DollarSign className="w-5 h-5" /> Sales
               </Link>
               <Link
-                to="/admin/settings"
+                to="/admin/setting"
                 className="flex items-center gap-3 hover:text-blue-600 transition"
               >
                 <Settings className="w-5 h-5" /> Settings
