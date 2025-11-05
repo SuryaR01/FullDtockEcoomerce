@@ -167,6 +167,7 @@ import {
   FaSearch,
   FaHeart
 } from "react-icons/fa";
+import {  FaTrash } from "react-icons/fa";
 import {
   Sheet,
   SheetContent,
@@ -174,12 +175,16 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useFavorites } from "../context/FavoritesContext";
+// import { FavoritesContext } from "../context/FavoritesContext";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [openCart, setOpenCart] = useState(false);
   const [showLoginMenu, setShowLoginMenu] = useState(false);
   const user = JSON.parse(localStorage.getItem("user"));
+    // const { favorites, toggleFavorite } = useFavorites();
+    const { favorites  } = useFavorites()
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -292,7 +297,7 @@ const Navbar = () => {
           </Sheet>
 
           {/* Like List  */}
-           <Sheet open={openCart} onOpenChange={setOpenCart}>
+           {/* <Sheet open={openCart} onOpenChange={setOpenCart}>
             <SheetTrigger asChild>
               <button
                 onClick={() => setOpenCart(true)}
@@ -309,12 +314,55 @@ const Navbar = () => {
                 <p>Your cart is empty!</p>
               </div>
             </SheetContent>
-          </Sheet>
+          </Sheet> */}
 
-          {/* Become a Seller */}
-          {/* <Link to="/seller" className="hover:text-cyan-600">
-            Become a Seller
-          </Link> */}
+           <Sheet open={openCart} onOpenChange={setOpenCart}>
+      <SheetTrigger asChild>
+        <button
+          onClick={() => setOpenCart(true)}
+          className="flex items-center gap-2 hover:text-cyan-600 transition"
+        >
+          <FaHeart /> Like ({favorites.length})
+        </button>
+      </SheetTrigger>
+
+      <SheetContent side="right" className="w-96">
+        <SheetHeader>
+          <SheetTitle className="text-cyan-600">Your Like List ❤️</SheetTitle>
+        </SheetHeader>
+
+        <div className="mt-6 space-y-4">
+          {favorites.length === 0 ? (
+            <p className="text-gray-500 text-center">No liked products yet!</p>
+          ) : (
+            favorites.map((item) => (
+              <div
+                key={item._id}
+                className="flex items-center gap-4 bg-gray-50 p-3 rounded-lg shadow-sm"
+              >
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="w-16 h-16 object-cover rounded-md"
+                />
+                <div className="flex-1">
+                  <h4 className="font-semibold text-gray-800">{item.name}</h4>
+                  <p className="text-cyan-600 font-medium">${item.price}</p>
+                </div>
+                <button
+                  onClick={() => toggleFavorite(item)}
+                  className="text-red-500 hover:text-red-600"
+                >
+                  <FaTrash />
+                </button>
+              </div>
+            ))
+          )}
+        </div>
+      </SheetContent>
+    </Sheet>
+
+         
 
           {/* Menu Icon */}
           <button className="text-xl hover:text-cyan-600">

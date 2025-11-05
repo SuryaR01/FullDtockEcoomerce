@@ -13,11 +13,7 @@ import { AgGridReact } from "ag-grid-react";
 import { themeQuartz } from "ag-grid-community";
 import { useRef } from "react";
 import { useMemo } from "react";
-import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
-
-
-
-
+import { ModuleRegistry, AllCommunityModule } from "ag-grid-community";
 
 const myTheme = themeQuartz.withParams({
   spacing: 5,
@@ -30,7 +26,7 @@ const myTheme = themeQuartz.withParams({
 });
 
 const AdProduct = () => {
- ModuleRegistry.registerModules([ AllCommunityModule ]);
+  ModuleRegistry.registerModules([AllCommunityModule]);
   const gridRef = useRef();
   const [products, setProducts] = useState([]);
 
@@ -134,7 +130,7 @@ const AdProduct = () => {
   //   // Implement delete API here
   // };
 
-  //SHOW ALL PRODUCTS FROM DATA BASE IN TABLE FUNCTIONS
+  // SHOW ALL PRODUCTS FROM DATA BASE IN TABLE FUNCTIONS
   // const [products, setProducts] = useState([]);
   // const fetchProducts = async () => {
   //   try {
@@ -155,6 +151,7 @@ const AdProduct = () => {
   // }, []);
 
   // FORM SUBMIT ADD PROFUCT SECTION METHODS/////
+
   const [product, setProduct] = useState({
     name: "",
     price: "",
@@ -272,9 +269,7 @@ const AdProduct = () => {
     <div className="min-h-screen bg-gray-50 p-6">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">
-          🛍️ Product Dashboard
-        </h1>
+        <h1 className="text-3xl font-bold text-gray-800">🛍️ Product List</h1>
         <button
           onClick={() => setShowForm(!showForm)}
           className=" flex justify-center items-center gap-2 bg-cyan-400 hover:bg-cyan-500 text-white px-6 py-2 rounded-lg shadow-lg transition-all"
@@ -293,94 +288,24 @@ const AdProduct = () => {
             </p>
           </div>
         ) : (
-          <div className="bg-white rounded-lg shadow overflow-x-auto">
-            {/* <table className="min-w-full table-auto border-collapse">
-              <thead className="bg-gray-100 uppercase">
-                <tr>
-                  <th className="px-6 py-3 border-b text-left text-sm font-semibold text-gray-700">
-                    Image
-                  </th>
-                  <th className="px-6 py-3 border-b text-left text-sm font-semibold text-gray-700">
-                    Name
-                  </th>
-                  <th className="px-6 py-3 border-b text-left text-sm font-semibold text-gray-700">
-                    Price
-                  </th>
-                  <th className="px-6 py-3 border-b text-left text-sm font-semibold text-gray-700">
-                    Category
-                  </th>
-                  <th className="px-6 py-3 border-b text-left text-sm font-semibold text-gray-700">
-                    Stock
-                  </th>
-                  <th className="px-6 py-3 border-b text-left text-sm font-semibold text-gray-700">
-                    Description
-                  </th>
-                  <th className="px-6 py-3 border-b text-left text-sm font-semibold text-gray-700">
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {products.map((prd) => (
-                  <tr key={prd._id} className="hover:bg-gray-50 capitalize">
-                    <td className="px-6 py-3 border-b">
-                      <img
-                        src={prd.image}
-                        alt={prd.name}
-                        className="w-12 h-12 object-cover rounded-lg"
-                      />
-                    </td>
-                    <td className="px-6 py-3 border-b text-justify">
-                      {prd.name}
-                    </td>
-                    <td className="px-6 py-3 border-b">₹{prd.price}</td>
-                    <td className="px-6 py-3 border-b">{prd.category}</td>
-                    <td
-                      className={`px-6 py-3 border-b font-bold ${
-                        prd.stock < 10 ? "text-red-500" : "text-green-600"
-                      }`}
-                    >
-                      {prd.stock}
-                    </td>
-                    <td className="px-6 py-3 border-b text-justify">
-                      {prd.description}
-                    </td>
-                    <td className="px-6 py-3 border-b">
-                      <button
-                        onClick={() => handleEditClick(prd)}
-                        className="border p-2 rounded-sm text-cyan-500 mr-2 hover:bg-green-50 mb-1"
-                      >
-                        <FaEdit />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(prd._id)}
-                        className="border p-2 rounded-sm text-red-500 hover:bg-red-50"
-                      >
-                        <MdDelete />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table> */}
-
-               <div
-      className="ag-theme-quartz m-10 rounded-2xl shadow-lg"
-      style={{ height: "600px", width: "93%" }}
-      theme={myTheme}
-    >
-      <AgGridReact
-        ref={gridRef}
-        rowData={products}
-        columnDefs={columnDefs}
-        defaultColDef={defaultColDef}
-        rowSelection="multiple"
-        animateRows={true}
-        pagination={true}
-        paginationPageSize={20}
-        enableRangeSelection={true}
-      />
-    </div>
+          <div>
+            <div
+              className="ag-theme-quartz m-10 rounded-2xl shadow-lg"
+              style={{ height: "600px", width: "93%" }}
+              theme={myTheme}
+            >
+              <AgGridReact
+                ref={gridRef}
+                rowData={products}
+                columnDefs={columnDefs}
+                defaultColDef={defaultColDef}
+                rowSelection="multiple"
+                animateRows={true}
+                pagination={true}
+                paginationPageSize={20}
+                enableRangeSelection={true}
+              />
+            </div>
 
             {/* ✅ Edit Form Modal */}
             {editingProduct && (
@@ -427,16 +352,22 @@ const AdProduct = () => {
                     {/* Category */}
                     <div>
                       <label className="block text-sm font-medium text-gray-600 mb-1">
-                        Category
+                        Categorys
                       </label>
-                      <input
-                        type="text"
+                      <select
                         name="category"
                         value={formData.category}
                         onChange={handleChange}
-                        placeholder="Enter category"
-                        className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition"
-                      />
+                        className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition"
+                      >
+                        <option value="">Select Category</option>
+                        <option value="Phones">📱 Phones</option>
+                        <option value="Computers">💻 Computers</option>
+                        <option value="SmartWatch">⌚ SmartWatch</option>
+                        <option value="Camera">📷 Camera</option>
+                        <option value="HeadPhones">🎧 HeadPhones</option>
+                        <option value="Gaming">🎮 Gaming</option>
+                      </select>
                     </div>
 
                     {/* Stock */}
@@ -574,7 +505,7 @@ const AdProduct = () => {
                         />
                       </div>
 
-                      <div>
+                      {/* <div>
                         <label className="block text-gray-700 font-semibold mb-2">
                           Category
                         </label>
@@ -586,6 +517,26 @@ const AdProduct = () => {
                           placeholder="Enter category"
                           className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-400 outline-none"
                         />
+                      </div> */}
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-600 mb-1">
+                          Category
+                        </label>
+                        <select
+                          name="category"
+                          value={product.category}
+                          onChange={inputHandler}
+                          className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition"
+                        >
+                          <option value="">Select Category</option>
+                          <option value="Phones">📱 Phones</option>
+                          <option value="Computers">💻 Computers</option>
+                          <option value="SmartWatch">⌚ SmartWatch</option>
+                          <option value="Camera">📷 Camera</option>
+                          <option value="HeadPhones">🎧 HeadPhones</option>
+                          <option value="Gaming">🎮 Gaming</option>
+                        </select>
                       </div>
 
                       <div>

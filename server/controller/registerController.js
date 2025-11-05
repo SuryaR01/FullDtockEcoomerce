@@ -1,5 +1,6 @@
 import Register from "../model/registerModel.js";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 // ================================ POST METHOD (CREATE USER) =============================
 export const create = async (req, res) => {
@@ -33,6 +34,13 @@ export const create = async (req, res) => {
       password: hashPassword, // store only hashed password
     });
 
+    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+      expiresIn: JWT_EXPIRES_IN,
+    });
+    console.log(token)
+    console.log(token)
+    res.json({ token });
+
     await newUser.save();
 
     res.status(201).json({ message: "User created successfully!" });
@@ -41,8 +49,6 @@ export const create = async (req, res) => {
     res.status(500).json({ errorMessage: error.message });
   }
 };
-
-
 
 
 // ================================ GET ALL USERS =========================================
@@ -106,20 +112,18 @@ export const deleteUser = async (req, res) => {
   }
 };
 
-
-
-
-
 // router.post("/login",
-  
-  export const login  = async (req, res) => {
+
+export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
     // Check if user exists
     const user = await Register.findOne({ email });
     if (!user) {
-      return res.status(404).json({ message: "User not found. Please register first!" });
+      return res
+        .status(404)
+        .json({ message: "User not found. Please register first!" });
     }
 
     // Compare password
@@ -133,12 +137,10 @@ export const deleteUser = async (req, res) => {
 
     res.status(200).json({
       message: isAdmin ? "Admin login successful!" : "Login successful!",
-      user: { email: user.email, name: user.name, isAdmin }
+      user: { email: user.email, name: user.name, isAdmin },
     });
-
   } catch (error) {
     console.error("Login Error:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
-

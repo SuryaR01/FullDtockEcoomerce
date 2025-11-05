@@ -3,21 +3,21 @@
 // // ================================ CREATE USER ==========================================
 // export const create = async (req, res) => {
 //   try {
-//     const { uaerName, uaerEmail, uaerPassword } = req.body;
+//     const { userName, userEmail, userPassword } = req.body;
 
 //     // ✅ Check for empty fields
-//     if (!name || !uaerEmail || !uaerPassword) {
+//     if (!name || !userEmail || !userPassword) {
 //       return res.status(400).json({ message: "All fields are required." });
 //     }
 
 //     // ✅ Check if user already exists
-//     const userExist = await Users.findOne({ uaerEmail: uaerEmail.trim() });
+//     const userExist = await Users.findOne({ userEmail: userEmail.trim() });
 //     if (userExist) {
 //       return res.status(400).json({ message: "User already exists." });
 //     }
 
 //     // ✅ Create and save new user
-//     const newUser = new Users({ name, uaerEmail, uaerPassword });
+//     const newUser = new Users({ name, userEmail, userPassword });
 //     await newUser.save();
 
 //     res.status(201).json({ message: "User created successfully!" });
@@ -97,24 +97,24 @@ import Users from "../model/userModel.js";
 // ================================ CREATE USER ==========================================
 export const create = async (req, res) => {
   try {
-    const { uaerName, uaerEmail, uaerPassword, userContact } = req.body;
+    const { userName, userEmail, userPassword, userContact } = req.body;
 
     // ✅ Check for empty required fields
-    if (!uaerName || !uaerEmail || !uaerPassword) {
+    if (!userName || !userEmail || !userPassword) {
       return res.status(400).json({ message: "All fields are required." });
     }
 
     // ✅ Check if user already exists
-    const userExist = await Users.findOne({ uaerEmail: uaerEmail.trim() });
+    const userExist = await Users.findOne({ userEmail: userEmail.trim() });
     if (userExist) {
       return res.status(400).json({ message: "User already exists." });
     }
 
     // ✅ Create and save new user (userContact is optional)
     const newUser = new Users({
-      uaerName,
-      uaerEmail,
-      uaerPassword,
+      userName,
+      userEmail,
+      userPassword,
       userContact: userContact || null, // optional field
     });
 
@@ -165,9 +165,9 @@ export const update = async (req, res) => {
 
     // ✅ Allow updating userContact if provided
     const updatedData = {
-      uaerName: req.body.uaerName || userExist.uaerName,
-      uaerEmail: req.body.uaerEmail || userExist.uaerEmail,
-      uaerPassword: req.body.uaerPassword || userExist.uaerPassword,
+      userName: req.body.userName || userExist.userName,
+      userEmail: req.body.userEmail || userExist.userEmail,
+      userPassword: req.body.userPassword || userExist.userPassword,
       userContact: req.body.userContact || userExist.userContact,
     };
 

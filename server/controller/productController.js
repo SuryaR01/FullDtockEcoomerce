@@ -108,3 +108,18 @@ export const getAllProducts = async (req, res) => {
     res.status(500).json({ errorMessage: error.message });
   }
 };
+
+
+// GET  and compare the products
+
+  export const prdCategory =  async (req, res) => {
+  try {
+    const { category } = req.query;
+    const query = category ? { category } : {};
+    const products = await Product.find(query);
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching products" });
+  }
+};
+
