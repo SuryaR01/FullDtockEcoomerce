@@ -19,41 +19,46 @@ import { FavoritesProvider } from "./context/FavoritesContext.jsx";
 import { Toaster } from "react-hot-toast";
 import Protected from "./Pages/Protected.jsx";
 import PrivateRoute from "./Components/PrivateRoute.jsx";
+import { AuthProvider } from "./context/AuthContext.jsx";
+import Contact from "./contact/Contact.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <FavoritesProvider>
-      <BrowserRouter>
-      <Toaster position="top-right" />
-        <Routes>
-          <Route path="/" element={<App />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/Product/:id" element={<ViewProduct />} />
-            <Route path="/allproduct" element={<AllProducts />} />
-          </Route>
+    <AuthProvider>
+      <FavoritesProvider>
+        <BrowserRouter>
+          <Toaster position="top-right" />
+          <Routes>
+            <Route path="/" element={<App />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/Product/:id" element={<ViewProduct />} />
+              <Route path="/allproduct" element={<AllProducts />} />
+              <Route path="/contact" element={<Contact />} />
+            </Route>
 
-          <Route path="/product" element={<Product />} />
-          <Route path="/category/:id" element={<Category />} />
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route path="/admin" element={<DashBoard />} />
-            <Route path="/admin/products" element={<AdProduct />} />
-            <Route path="/admin/users" element={<UserList />} />
-            <Route path="/admin/setting" element={<Settings />} />
-          </Route>
+            <Route path="/product" element={<Product />} />
+            <Route path="/category/:id" element={<Category />} />
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route path="/admin" element={<DashBoard />} />
+              <Route path="/admin/products" element={<AdProduct />} />
+              <Route path="/admin/users" element={<UserList />} />
+              <Route path="/admin/setting" element={<Settings />} />
+            </Route>
 
-          <Route path="/register" element={<Register />} />
-          <Route path="/userlogin" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/userlogin" element={<Login />} />
 
-          <Route
-          path="/protected"
-          element={
-            <PrivateRoute>
-              <Protected />
-            </PrivateRoute>
-          }
-        />
-        </Routes>
-      </BrowserRouter>
-    </FavoritesProvider>
+            <Route
+              path="/protected"
+              element={
+                <PrivateRoute>
+                  <Protected />
+                </PrivateRoute>
+              }
+            />
+          </Routes>
+        </BrowserRouter>
+      </FavoritesProvider>
+    </AuthProvider>
   </StrictMode>
 );

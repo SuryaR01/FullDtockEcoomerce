@@ -23,6 +23,8 @@
 
 
 
+
+// checked ok
 import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -90,38 +92,64 @@ router.post("/register", async (req, res) => {
 });
 
 
-
-// ---------- LOGIN ----------
-router.post("/login", async (req, res) => {
+// ---------- GET ALL USERS ----------
+router.get("/users", async (req, res) => {
   try {
-    const { username, password } = req.body;
-    if (!username || !password)
-      return res.status(400).json({ message: "Username & password required" });
+    // Fetch all users from MongoDB (but exclude passwords)
+    const users = await User.find().select("-userPassword");
 
-    const user = await User.findOne({ username });
-    if (!user) return res.status(401).json({ message: "Invalid credentials" });
+    // If no users found
+    if (!users || users.length === 0) {
+      return res.status(404).json({ message: "No users found" });
+    }
 
-    const valid = await bcrypt.compare(password, user.passwordHash);
-    if (!valid)
-      return res.status(401).json({ message: "Invalid credentials" });
-
-    const accessToken = createAccessToken(user);
-    const refreshToken = createRefreshToken(user);
-
-    refreshTokensStore.push(refreshToken);
-
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: false, // true in production
-      sameSite: "strict",
-      path: "/api/auth/refresh",
+    res.status(200).json({
+      message: "✅ Users fetched successfully",
+      count: users.length,
+      users,
     });
-
-    res.json({ accessToken });
   } catch (err) {
-    res.status(500).json({ message: "Login failed", error: err.message });
+    console.error("❌ Get users error:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 });
+
+
+
+router.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // 1. Check inputs
+    if (!email || !password) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    // 2. Find user by email
+    const user = await User.findOne({ userEmail: email });
+    if (!user) return res.status(400).json({ message: "User not found" });
+
+    // 3. Compare password
+    const isMatch = await bcrypt.compare(password, user.userPassword);
+    if (!isMatch) return res.status(400).json({ message: "Invalid password" });
+
+    // 4. Generate token
+    const token = jwt.sign(
+      { id: user._id, email: user.userEmail },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
+
+    res.status(200).json({
+      message: "✅ Login successful",
+      accessToken: token,
+    });
+  } catch (err) {
+    console.error("❌ Login error:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+});
+
 
 // ---------- REFRESH ----------
 router.post("/refresh", (req, res) => {
@@ -167,4 +195,32 @@ router.get("/protected", authenticateToken, (req, res) => {
   res.json({ message: "This is protected data!", user: req.user });
 });
 
+
+// ---------- DELETE USER ----------
+router.delete("/users/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // 🧩 Check if user exists
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // 🧩 Delete the user
+    await User.findByIdAndDelete(id);
+
+    res.status(200).json({
+      message: "✅ User deleted successfully",
+      deletedUserId: id,
+    });
+  } catch (err) {
+    console.error("❌ Delete user error:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+});
+
+
 export default router;
+
+

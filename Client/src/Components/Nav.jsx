@@ -1,7 +1,5 @@
-
-
 // import React, { useState } from "react";
-// import { Link } from "react-router-dom";
+// import { Link, useNavigate } from "react-router-dom";
 // import {
 //   FaShoppingCart,
 //   FaUser,
@@ -10,6 +8,8 @@
 //   FaBars,
 //   FaEllipsisV,
 //   FaSearch,
+//   FaHeart,
+//   FaTrash,
 // } from "react-icons/fa";
 // import {
 //   Sheet,
@@ -18,27 +18,49 @@
 //   SheetTitle,
 //   SheetTrigger,
 // } from "@/components/ui/sheet";
+// import { useFavorites } from "../context/FavoritesContext";
+// import toast from "react-hot-toast";
 
-// const Nav = () => {
-//   const [isLoggedIn, setIsLoggedIn] = useState(false);
+// const Navbar = () => {
+//   const navigate = useNavigate();
 //   const [openCart, setOpenCart] = useState(false);
+//   const [openFavorites, setOpenFavorites] = useState(false);
 //   const [showLoginMenu, setShowLoginMenu] = useState(false);
+//   const { favorites, toggleFavorite } = useFavorites();
 
-//   const handleLoginLogout = () => setIsLoggedIn(!isLoggedIn);
+//   let user = JSON.parse(localStorage.getItem("user") || "null");
+
+
+
+// try {
+//   const storedUser = localStorage.getItem("user");
+//   if (storedUser) user = JSON.parse(storedUser);
+// } catch (error) {
+//   console.error("Error parsing user data:", error);
+// }
+
+
+//   // Logout
+//   const handleLogout = () => {
+//     localStorage.removeItem("accessToken");
+//     localStorage.removeItem("user");
+//     toast.success("Logged out successfully!");
+//     navigate("/userlogin");
+//   };
 
 //   return (
 //     <nav className="bg-white shadow-sm sticky top-0 z-50">
 //       <div className="container mx-auto flex items-center justify-between px-4 py-2">
 //         {/* ================= LEFT: LOGO ================= */}
 //         <Link to="/" className="flex flex-col leading-tight">
-//           <span className="text-2xl font-bold text-blue-600">Flipkart</span>
+//           <span className="text-2xl font-bold text-cyan-600">MyApp</span>
 //           <span className="text-xs text-gray-500 italic">
 //             Explore <span className="text-yellow-500 font-semibold">Plus ✨</span>
 //           </span>
 //         </Link>
 
 //         {/* ================= CENTER: SEARCH BAR ================= */}
-//         <div className="hidden md:flex items-center bg-blue-50 rounded-md px-3 py-1 w-1/2">
+//         <div className="hidden md:flex items-center bg-cyan-50 rounded-md px-3 py-1 w-1/2">
 //           <FaSearch className="text-gray-400 text-lg mr-2" />
 //           <input
 //             type="text"
@@ -47,78 +69,143 @@
 //           />
 //         </div>
 
-//         {/* ================= RIGHT: ICONS / LOGIN ================= */}
+//         {/* ================= RIGHT SECTION ================= */}
 //         <div className="hidden md:flex items-center space-x-8 text-gray-700 font-medium">
-//           {/* Login Dropdown */}
+//           {/* ✅ Admin Dashboard Link */}
+//           {user?.role === "admin" && (
+//             <Link
+//               to="/admin"
+//               className="flex items-center gap-2 text-cyan-600 font-semibold hover:text-cyan-700"
+//             >
+//               <FaUserShield /> Dashboard
+//             </Link>
+//           )}
+
+//           {/* ✅ User Avatar / Login Button */}
 //           <div
 //             className="relative"
 //             onMouseEnter={() => setShowLoginMenu(true)}
 //             onMouseLeave={() => setShowLoginMenu(false)}
 //           >
-//             <Link to={"/userlogin"} className="flex items-center gap-1 bg-blue-600 text-white px-4 py-1 rounded-md hover:bg-blue-700">
-//               <FaUser /> Login
-//             </Link>
-
-//             {/* Dropdown Menu */}
-//             {showLoginMenu && (
-//               <div className="absolute right-0 mt-0 w-56 bg-white rounded-md shadow-lg border">
-//                 <div className="px-4 py-2 flex justify-between items-center border-b">
-//                   <span className="text-gray-700 text-sm">New customer?</span>
-//                   <Link to="/register" className="text-blue-600 text-sm font-semibold">
-//                     Sign Up
-//                   </Link>
+//             {!user ? (
+//               <Link
+//                 to="/userlogin"
+//                 className="flex items-center gap-1 bg-cyan-600 text-white px-4 py-1 rounded-md hover:bg-cyan-700"
+//               >
+//                 <FaUser /> Login
+//               </Link>
+//             ) : (
+//               <div className="flex items-center gap-3 cursor-pointer">
+//                 {/* ✅ First Letter Avatar */}
+//                 <div className="w-8 h-8 flex items-center justify-center rounded-full bg-cyan-600 text-white font-bold">
+//                   {user.username?.charAt(0).toUpperCase()}
 //                 </div>
+//                 <span className="font-medium text-cyan-700">{user.username}</span>
+//               </div>
+//             )}
+
+//             {/* ✅ Dropdown Menu */}
+//             {showLoginMenu && user && (
+//               <div className="absolute right-0  w-56 bg-white rounded-md shadow-lg border z-50">
 //                 <ul className="text-gray-700 text-sm">
-//                   <li className="px-4 py-2 hover:bg-gray-50 cursor-pointer flex items-center gap-2">
+//                   <Link
+//                     to="/profile"
+//                     className="px-4 py-2 hover:bg-gray-50 flex items-center gap-2"
+//                   >
 //                     <FaUser /> My Profile
-//                   </li>
-//                   <li className="px-4 py-2 hover:bg-gray-50 cursor-pointer flex items-center gap-2">
-//                     🏅 Flipkart Plus Zone
-//                   </li>
-//                   <li className="px-4 py-2 hover:bg-gray-50 cursor-pointer flex items-center gap-2">
-//                     📦 Orders
-//                   </li>
-//                   <li className="px-4 py-2 hover:bg-gray-50 cursor-pointer flex items-center gap-2">
-//                     ❤️ Wishlist
-//                   </li>
-//                   <li className="px-4 py-2 hover:bg-gray-50 cursor-pointer flex items-center gap-2">
-//                     🎁 Rewards
-//                   </li>
-//                   <li className="px-4 py-2 hover:bg-gray-50 cursor-pointer flex items-center gap-2">
-//                     🎟️ Gift Cards
-//                   </li>
+//                   </Link>
+//                   {user.role === "admin" && (
+//                     <Link
+//                       to="/admin"
+//                       className="px-4 py-2 hover:bg-gray-50 flex items-center gap-2 text-cyan-600 font-semibold"
+//                     >
+//                       <FaUserShield /> Admin Panel
+//                     </Link>
+//                   )}
+//                   <button
+//                     onClick={handleLogout}
+//                     className="w-full text-left px-4 py-2 hover:bg-gray-50 flex items-center gap-2"
+//                   >
+//                     <FaSignOutAlt /> Logout
+//                   </button>
 //                 </ul>
 //               </div>
 //             )}
 //           </div>
 
-//           {/* Cart Button */}
+//           {/* ✅ CART Drawer */}
 //           <Sheet open={openCart} onOpenChange={setOpenCart}>
 //             <SheetTrigger asChild>
 //               <button
 //                 onClick={() => setOpenCart(true)}
-//                 className="flex items-center gap-2 hover:text-blue-600"
+//                 className="flex items-center gap-2 hover:text-cyan-600"
 //               >
 //                 <FaShoppingCart /> Cart
 //               </button>
 //             </SheetTrigger>
 //             <SheetContent side="right" className="w-80">
 //               <SheetHeader>
-//                 <SheetTitle className="text-green-600">Your Cart 🛒</SheetTitle>
+//                 <SheetTitle className="text-cyan-600">Your Cart 🛒</SheetTitle>
 //               </SheetHeader>
-//               <div className="mt-4 text-gray-700">
+//               <div className="mt-4 ml-3 text-gray-700">
 //                 <p>Your cart is empty!</p>
 //               </div>
 //             </SheetContent>
 //           </Sheet>
 
-//           {/* Become a Seller */}
-//           <Link to="/seller" className="hover:text-blue-600">
-//             Become a Seller
-//           </Link>
+//           {/* ✅ FAVORITES Drawer */}
+//           <Sheet open={openFavorites} onOpenChange={setOpenFavorites}>
+//             <SheetTrigger asChild>
+//               <button
+//                 onClick={() => setOpenFavorites(true)}
+//                 className="flex items-center gap-2 hover:text-cyan-600 transition"
+//               >
+//                 <FaHeart /> Like ({favorites.length})
+//               </button>
+//             </SheetTrigger>
+//             <SheetContent side="right" className="w-96">
+//               <SheetHeader>
+//                 <SheetTitle className="text-cyan-600">
+//                   Your Like List ❤️
+//                 </SheetTitle>
+//               </SheetHeader>
+//               <div className="mt-6 space-y-4">
+//                 {favorites.length === 0 ? (
+//                   <p className="text-gray-500 text-center">
+//                     No liked products yet!
+//                   </p>
+//                 ) : (
+//                   favorites.map((item) => (
+//                     <div
+//                       key={item._id}
+//                       className="flex items-center gap-4 bg-gray-50 p-3 rounded-lg shadow-sm"
+//                     >
+//                       <img
+//                         src={item.image}
+//                         alt={item.name}
+//                         className="w-16 h-16 object-cover rounded-md"
+//                       />
+//                       <div className="flex-1">
+//                         <h4 className="font-semibold text-gray-800">
+//                           {item.name}
+//                         </h4>
+//                         <p className="text-cyan-600 font-medium">${item.price}</p>
+//                       </div>
+//                       <button
+//                         onClick={() => toggleFavorite(item)}
+//                         className="text-red-500 hover:text-red-600"
+//                       >
+//                         <FaTrash />
+//                       </button>
+//                     </div>
+//                   ))
+//                 )}
+//               </div>
+//             </SheetContent>
+//           </Sheet>
 
 //           {/* Menu Icon */}
-//           <button className="text-xl hover:text-blue-600">
+//           <button className="text-xl hover:text-cyan-600">
 //             <FaEllipsisV />
 //           </button>
 //         </div>
@@ -132,16 +219,53 @@
 //             </SheetTrigger>
 //             <SheetContent side="right" className="w-64">
 //               <SheetHeader>
-//                 <SheetTitle className="text-blue-600 text-lg font-bold">
-//                   Flipkart Menu
+//                 <SheetTitle className="text-cyan-600 text-lg font-bold">
+//                   MyApp Menu
 //                 </SheetTitle>
 //               </SheetHeader>
 //               <ul className="mt-4 ml-4 space-y-4 text-gray-700 font-medium">
-//                 <li><Link to="/" className="block hover:text-blue-600">Home</Link></li>
-//                 <li><Link to="/products" className="block hover:text-blue-600">Products</Link></li>
-//                 <li><Link to="/seller" className="block hover:text-blue-600">Become a Seller</Link></li>
-//                 <li><button onClick={() => setOpenCart(true)} className="flex items-center gap-2 hover:text-blue-600"><FaShoppingCart /> Cart</button></li>
-//                 <li><button onClick={handleLoginLogout} className="flex items-center gap-2 hover:text-blue-600"><FaUser /> Login</button></li>
+//                 <li>
+//                   <Link to="/" className="block hover:text-cyan-600">
+//                     Home
+//                   </Link>
+//                 </li>
+//                 {user?.role === "admin" && (
+//                   <li>
+//                     <Link to="/admin" className="block hover:text-cyan-600">
+//                       Admin Panel
+//                     </Link>
+//                   </li>
+//                 )}
+//                 <li>
+//                   <Link to="/products" className="block hover:text-cyan-600">
+//                     Products
+//                   </Link>
+//                 </li>
+//                 <li>
+//                   <button
+//                     onClick={() => setOpenCart(true)}
+//                     className="flex items-center gap-2 hover:text-cyan-600"
+//                   >
+//                     <FaShoppingCart /> Cart
+//                   </button>
+//                 </li>
+//                 <li>
+//                   {!user ? (
+//                     <Link
+//                       to="/userlogin"
+//                       className="flex items-center gap-2 hover:text-cyan-600"
+//                     >
+//                       <FaUser /> Login
+//                     </Link>
+//                   ) : (
+//                     <button
+//                       onClick={handleLogout}
+//                       className="flex items-center gap-2 hover:text-cyan-600"
+//                     >
+//                       <FaSignOutAlt /> Logout
+//                     </button>
+//                   )}
+//                 </li>
 //               </ul>
 //             </SheetContent>
 //           </Sheet>
@@ -151,7 +275,7 @@
 //   );
 // };
 
-// export default Nav;
+// export default Navbar;
 
 
 
@@ -165,9 +289,9 @@ import {
   FaBars,
   FaEllipsisV,
   FaSearch,
-  FaHeart
+  FaHeart,
+  FaTrash,
 } from "react-icons/fa";
-import {  FaTrash } from "react-icons/fa";
 import {
   Sheet,
   SheetContent,
@@ -176,20 +300,38 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useFavorites } from "../context/FavoritesContext";
-// import { FavoritesContext } from "../context/FavoritesContext";
+import toast from "react-hot-toast";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [openCart, setOpenCart] = useState(false);
+  const [openFavorites, setOpenFavorites] = useState(false);
   const [showLoginMenu, setShowLoginMenu] = useState(false);
-  const user = JSON.parse(localStorage.getItem("user"));
-    // const { favorites, toggleFavorite } = useFavorites();
-    const { favorites  } = useFavorites()
+  const { favorites, toggleFavorite } = useFavorites();
 
+  let user = JSON.parse(localStorage.getItem("user") || "null");
+
+  try {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) user = JSON.parse(storedUser);
+  } catch (error) {
+    console.error("Error parsing user data:", error);
+  }
+
+  // ✅ Logout Function
   const handleLogout = () => {
+    localStorage.removeItem("accessToken");
     localStorage.removeItem("user");
+    toast.success("Logged out successfully!");
     navigate("/userlogin");
   };
+
+  // ✅ Extract first letter of email or username
+  const firstLetter =
+    user?.username?.charAt(0)?.toUpperCase() ||
+    user?.userName?.charAt(0)?.toUpperCase() ||
+    user?.email?.charAt(0)?.toUpperCase() ||
+    "?";
 
   return (
     <nav className="bg-white shadow-sm sticky top-0 z-50">
@@ -212,10 +354,10 @@ const Navbar = () => {
           />
         </div>
 
-        {/* ================= RIGHT: ICONS / LOGIN ================= */}
+        {/* ================= RIGHT SECTION ================= */}
         <div className="hidden md:flex items-center space-x-8 text-gray-700 font-medium">
-          {/* Admin Dashboard Link */}
-          {user && user.isAdmin && (
+          {/* ✅ Admin Dashboard Link */}
+          {user?.role === "admin" && (
             <Link
               to="/admin"
               className="flex items-center gap-2 text-cyan-600 font-semibold hover:text-cyan-700"
@@ -224,7 +366,7 @@ const Navbar = () => {
             </Link>
           )}
 
-          {/* Login Dropdown / User Menu */}
+          {/* ✅ User Avatar / Login Button */}
           <div
             className="relative"
             onMouseEnter={() => setShowLoginMenu(true)}
@@ -238,45 +380,47 @@ const Navbar = () => {
                 <FaUser /> Login
               </Link>
             ) : (
-              <button className="flex items-center gap-2 text-cyan-700 font-semibold">
-                <FaUser /> {user.name || "User"}
-              </button>
+              <div className="flex items-center gap-3 cursor-pointer">
+                {/* ✅ First Letter Avatar */}
+                <div className="w-8 h-8 flex items-center justify-center rounded-full bg-cyan-600 text-white font-bold">
+                  {firstLetter}
+                </div>
+                <span className="font-medium text-cyan-700">
+                  {user.username || user.userName || user.email}
+                </span>
+              </div>
             )}
 
-            {/* Dropdown Menu */}
-            {showLoginMenu && (
-              <div className="absolute right-0 mt-0 w-56 bg-white rounded-md shadow-lg border">
-                {!user ? (
-                  <div className="px-4 py-2 flex justify-between items-center border-b">
-                    <span className="text-gray-700 text-sm">New customer?</span>
+            {/* ✅ Dropdown Menu */}
+            {showLoginMenu && user && (
+              <div className="absolute right-0 w-56 bg-white rounded-md shadow-lg border z-50">
+                <ul className="text-gray-700 text-sm">
+                  <Link
+                    to="/profile"
+                    className="px-4 py-2 hover:bg-gray-50 flex items-center gap-2"
+                  >
+                    <FaUser /> My Profile
+                  </Link>
+                  {user.role === "admin" && (
                     <Link
-                      to="/register"
-                      className="text-cyan-600 text-sm font-semibold"
+                      to="/admin"
+                      className="px-4 py-2 hover:bg-gray-50 flex items-center gap-2 text-cyan-600 font-semibold"
                     >
-                      Sign Up
+                      <FaUserShield /> Admin Panel
                     </Link>
-                  </div>
-                ) : (
-                  <ul className="text-gray-700 text-sm">
-                    <Link to={"/admin/setting"} className="px-4 py-2 hover:bg-gray-50 cursor-pointer flex items-center gap-2">
-                      <FaUser /> My Profile
-                    </Link>
-                    {user.isAdmin && (
-                      <Link to={"/admin"} className="px-4 py-2 hover:bg-gray-50 cursor-pointer flex items-center gap-2">
-                        <FaUserShield /> Admin Panel
-                      </Link>
-                    )}
-                    <Link className="px-4 py-2 hover:bg-gray-50 cursor-pointer flex items-center gap-2">
-                      <FaSignOutAlt />{" "}
-                      <button onClick={handleLogout}>Logout</button>
-                    </Link>
-                  </ul>
-                )}
+                  )}
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-4 py-2 hover:bg-gray-50 flex items-center gap-2"
+                  >
+                    <FaSignOutAlt /> Logout
+                  </button>
+                </ul>
               </div>
             )}
           </div>
 
-          {/* Cart LIst */}
+          {/* ✅ CART Drawer */}
           <Sheet open={openCart} onOpenChange={setOpenCart}>
             <SheetTrigger asChild>
               <button
@@ -296,73 +440,67 @@ const Navbar = () => {
             </SheetContent>
           </Sheet>
 
-          {/* Like List  */}
-           {/* <Sheet open={openCart} onOpenChange={setOpenCart}>
+          {/* ✅ FAVORITES Drawer */}
+          <Sheet open={openFavorites} onOpenChange={setOpenFavorites}>
             <SheetTrigger asChild>
               <button
-                onClick={() => setOpenCart(true)}
-                className="flex items-center gap-2 hover:text-cyan-600"
+                onClick={() => setOpenFavorites(true)}
+                className="flex items-center gap-2 hover:text-cyan-600 transition"
               >
-                <FaHeart /> Like
+                <FaHeart /> Like ({favorites.length})
               </button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-80">
+            <SheetContent side="right" className="w-96 overflow-y-auto">
               <SheetHeader>
-                <SheetTitle className="text-cyan-600">Your Like List ❤️</SheetTitle>
+                <SheetTitle className="text-cyan-600">
+                  Your Like List ❤️
+                </SheetTitle>
               </SheetHeader>
-              <div className="mt-4 ml-3 text-gray-700">
-                <p>Your cart is empty!</p>
+
+              <div className="mt-6 space-y-4">
+                {favorites.length === 0 ? (
+                  <p className="text-gray-500 text-center">
+                    No liked products yet!
+                  </p>
+                ) : (
+                  favorites.map((item) => {
+                    // ✅ Support both structures (old and new)
+                    const product = item.product || item;
+
+                    return (
+                      <div
+                        key={item._id}
+                        className="flex items-center gap-4 bg-gray-50 p-3 rounded-lg shadow-sm"
+                      >
+                        <img
+                          src={
+                            product?.image ||
+                            "https://via.placeholder.com/150?text=No+Image"
+                          }
+                          alt={product?.name || "Product"}
+                          className="w-16 h-16 object-cover rounded-md"
+                        />
+                        <div className="flex-1">
+                          <h4 className="font-semibold text-gray-800">
+                            {product?.name || "Unnamed"}
+                          </h4>
+                          <p className="text-cyan-600 font-medium">
+                            ${product?.price || "N/A"}
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => toggleFavorite(product)}
+                          className="text-red-500 hover:text-red-600"
+                        >
+                          <FaTrash />
+                        </button>
+                      </div>
+                    );
+                  })
+                )}
               </div>
             </SheetContent>
-          </Sheet> */}
-
-           <Sheet open={openCart} onOpenChange={setOpenCart}>
-      <SheetTrigger asChild>
-        <button
-          onClick={() => setOpenCart(true)}
-          className="flex items-center gap-2 hover:text-cyan-600 transition"
-        >
-          <FaHeart /> Like ({favorites.length})
-        </button>
-      </SheetTrigger>
-
-      <SheetContent side="right" className="w-96">
-        <SheetHeader>
-          <SheetTitle className="text-cyan-600">Your Like List ❤️</SheetTitle>
-        </SheetHeader>
-
-        <div className="mt-6 space-y-4">
-          {favorites.length === 0 ? (
-            <p className="text-gray-500 text-center">No liked products yet!</p>
-          ) : (
-            favorites.map((item) => (
-              <div
-                key={item._id}
-                className="flex items-center gap-4 bg-gray-50 p-3 rounded-lg shadow-sm"
-              >
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-16 h-16 object-cover rounded-md"
-                />
-                <div className="flex-1">
-                  <h4 className="font-semibold text-gray-800">{item.name}</h4>
-                  <p className="text-cyan-600 font-medium">${item.price}</p>
-                </div>
-                <button
-                  onClick={() => toggleFavorite(item)}
-                  className="text-red-500 hover:text-red-600"
-                >
-                  <FaTrash />
-                </button>
-              </div>
-            ))
-          )}
-        </div>
-      </SheetContent>
-    </Sheet>
-
-         
+          </Sheet>
 
           {/* Menu Icon */}
           <button className="text-xl hover:text-cyan-600">
@@ -389,21 +527,16 @@ const Navbar = () => {
                     Home
                   </Link>
                 </li>
-                {user && user.isAdmin && (
+                {user?.role === "admin" && (
                   <li>
-                    <Link to="/dashboard" className="block hover:text-cyan-600">
-                      Dashboard
+                    <Link to="/admin" className="block hover:text-cyan-600">
+                      Admin Panel
                     </Link>
                   </li>
                 )}
                 <li>
                   <Link to="/products" className="block hover:text-cyan-600">
                     Products
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/seller" className="block hover:text-cyan-600">
-                    Become a Seller
                   </Link>
                 </li>
                 <li>
@@ -441,3 +574,7 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+
+
+

@@ -120,37 +120,6 @@ const AdProduct = () => {
     []
   );
 
-  // const handleEditClick = (prd) => {
-  //   console.log("📝 Edit clicked:", prd);
-  //   // You can open a modal or navigate to edit page here
-  // };
-
-  // const handleDelete = (id) => {
-  //   console.log("🗑 Delete clicked:", id);
-  //   // Implement delete API here
-  // };
-
-  // SHOW ALL PRODUCTS FROM DATA BASE IN TABLE FUNCTIONS
-  // const [products, setProducts] = useState([]);
-  // const fetchProducts = async () => {
-  //   try {
-  //     const res = await axios.get("http://localhost:8000/prd/products");
-  //     if (Array.isArray(res.data.products)) {
-  //       setProducts(res.data.products);
-  //     } else {
-  //       setProducts([]);
-  //     }
-  //   } catch (error) {
-  //     console.error("❌ Error fetching products:", error);
-  //     setProducts([]);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchProducts();
-  // }, []);
-
-  // FORM SUBMIT ADD PROFUCT SECTION METHODS/////
 
   const [product, setProduct] = useState({
     name: "",

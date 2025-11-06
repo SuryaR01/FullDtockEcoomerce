@@ -1,37 +1,47 @@
 
 
+
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { AgGridReact } from "ag-grid-react";
-import { themeQuartz } from "ag-grid-community";
+import { AllCommunityModule, ModuleRegistry, themeQuartz } from "ag-grid-community";
 import { MdDelete } from "react-icons/md";
 import { FaUser } from "react-icons/fa";
-import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
 
+
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 const UserList = () => {
   const gridRef = useRef();
   const [users, setUsers] = useState([]);
-  ModuleRegistry.registerModules([ AllCommunityModule ]);
 
-  // GET all users
+
+
   const fetchUsers = async () => {
-    try {
-      const res = await axios.get("http://localhost:8000/userReg/registerAll");
-      setUsers(res.data);
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to fetch users!");
-    }
-  };
+  try {
+    const res = await axios.get("http://localhost:8000/api/auth/users");
 
-  // Delete user
+    // ✅ Ensure it's always an array
+    const data = Array.isArray(res.data)
+      ? res.data
+      : res.data.users || [];
+
+    setUsers(data);
+  } catch (err) {
+    console.error("❌ Fetch users failed:", err);
+    toast.error("Failed to fetch users!");
+    setUsers([]); // ✅ prevent undefined
+  }
+};
+
+
+  // ✅ Delete user
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
 
     try {
-      await axios.delete(`http://localhost:8000/userReg/deleteRegister/${id}`);
+      await axios.delete(`http://localhost:8000/api/auth/users/${id}`);
       toast.success("User deleted successfully!");
       fetchUsers();
     } catch (err) {
@@ -44,7 +54,7 @@ const UserList = () => {
     fetchUsers();
   }, []);
 
-  
+  // ✅ Custom theme
   const myTheme = themeQuartz.withParams({
     spacing: 5,
     foregroundColor: "rgb(12, 140, 116)",
@@ -55,12 +65,12 @@ const UserList = () => {
     fontSize: 16,
   });
 
-  // Columns setup
+  // ✅ Columns
   const columnDefs = useMemo(
     () => [
       {
         headerName: "Name",
-        field: "name",
+        field: "userName",
         sortable: true,
         filter: "agTextColumnFilter",
         floatingFilter: true,
@@ -69,15 +79,15 @@ const UserList = () => {
       },
       {
         headerName: "Email",
-        field: "email",
+        field: "userEmail",
         sortable: true,
         filter: "agTextColumnFilter",
         floatingFilter: true,
         flex: 1.5,
       },
       {
-        headerName: "PassWord",
-        field: "password",
+        headerName: "Password",
+        field: "_id",
         sortable: true,
         filter: "agTextColumnFilter",
         floatingFilter: true,
@@ -128,8 +138,8 @@ const UserList = () => {
           defaultColDef={defaultColDef}
           animateRows={true}
           pagination={true}
-          paginationPageSize={10}
-          rowSelection="multiple"
+          paginationPageSize={20}
+          rowSelection="multiple" 
         />
       </div>
     </div>

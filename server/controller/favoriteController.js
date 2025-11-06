@@ -1,82 +1,152 @@
-// import User from "../models/userModel.js";
-import Product from "../model/productModel.js";
-import User from "../model/userModel.js";
 
-// ✅ Add to favorites
+
+import Favorite from "../model/favoriteModel.js";
+import Product from "../model/productModel.js";
+
+/**
+ * ✅ Add Product to Favorites (stores full product details)
+ */
+export const addFavorite = async (req, res) => {
+  try {
+    const { username, productId } = req.body;
+
+    if (!username || !productId) {
+      return res
+        .status(400)
+        .json({ message: "username and productId are required" });
+    }
+
+    // 🧩 Check if product exists
+    const product = await Product.findById(productId);
+    if (!product)
+      return res.status(404).json({ message: "Product not found" });
+
+    // 🧩 Check for duplicate favorite
+    const existing = await Favorite.findOne({
+      username,
+      "product._id": productId,
+    });
+    if (existing) {
+      return res.status(200).json({ message: "Already in favorites" });
+    }
+
+    // 🧩 Create new favorite with product snapshot
+    const fav = new Favorite({
+      username,
+      product: {
+        _id: product._id,
+        name: product.name,
+        price: product.price,
+        category: product.category,
+        description: product.description,
+        image: product.image,
+        stock: product.stock,
+      },
+    });
+
+    await fav.save();
+
+    res.status(201).json({
+      message: "✅ Added to favorites",
+      fav,
+    });
+  } catch (error) {
+    console.error("❌ Favorite add error:", error);
+    res
+      .status(500)
+      .json({ message: "Server error", error: error.message });
+  }
+};
+
 // export const addFavorite = async (req, res) => {
 //   try {
-//     const userId = req.user.id;
-//     const { productId } = req.body;
+//     const { username, productId, name, price, category, description, image, stock } = req.body;
 
-//     const user = await User.findById(userId);
-//     if (!user) return res.status(404).json({ message: "User not found" });
-
-//     if (!user.favorites.includes(productId)) {
-//       user.favorites.push(productId);
-//       await user.save();
+//     if (!username) {
+//       return res.status(400).json({ message: "Username is required" });
 //     }
 
-//     res.json({ message: "Added to favorites", favorites: user.favorites });
+//     if (!productId) {
+//       return res.status(400).json({ message: "Product ID is missing or invalid" });
+//     }
+
+//     // ✅ Check if already exists
+//     const existing = await Favorite.findOne({ username, productId });
+//     if (existing) {
+//       return res.status(200).json({ message: "Already in favorites" });
+//     }
+
+//     // ✅ Create new favorite entry with full product snapshot
+//     const fav = new Favorite({
+//       username,
+//       productId,
+//       product: { name, price, category, description, image, stock },
+//     });
+
+//     await fav.save();
+//     res.status(201).json({ message: "✅ Added to favorites", fav });
 //   } catch (error) {
-//     res.status(500).json({ message: error.message });
+//     console.error("❌ Favorite add error:", error);
+//     res.status(500).json({ message: "Server error", error: error.message });
 //   }
 // };
 
 
-export const addFavorite = async (req, res) => {
+
+
+/**
+ * ✅ Remove Product from Favorites (by username + productId)
+ */
+export const removeFromFavorites = async (req, res) => {
   try {
-    const userId = req.user._id; // ✅ set by authMiddleware
-    const { productId } = req.body;
+    const { username, productId } = req.body;
 
-    let favorite = await Favorite.findOne({ user: userId });
-
-    if (!favorite) {
-      favorite = new Favorite({ user: userId, products: [productId] });
-    } else {
-      const index = favorite.products.indexOf(productId);
-      if (index > -1) {
-        favorite.products.splice(index, 1); // remove
-      } else {
-        favorite.products.push(productId); // add
-      }
+    if (!username || !productId) {
+      return res
+        .status(400)
+        .json({ message: "username and productId are required" });
     }
 
-    await favorite.save();
-    res.json(favorite);
+    const deleted = await Favorite.findOneAndDelete({
+      username,
+      "product._id": productId,
+    });
+
+    if (!deleted) {
+      return res.status(404).json({ message: "Favorite not found" });
+    }
+
+    res.json({ message: "✅ Removed from favorites" });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
+    console.error("❌ Favorite remove error:", error);
+    res
+      .status(500)
+      .json({ message: "Server error", error: error.message });
   }
 };
 
-// ✅ Remove from favorites
-export const removeFavorite = async (req, res) => {
+/**
+ * ✅ Get All Favorites for a User (by username)
+ */
+export const getUserFavorites = async (req, res) => {
   try {
-    const userId = req.user.id;
-    const { productId } = req.params;
+    const { username } = req.params;
 
-    const user = await User.findById(userId);
-    if (!user) return res.status(404).json({ message: "User not found" });
+    if (!username) {
+      return res.status(400).json({ message: "username is required" });
+    }
 
-    user.favorites = user.favorites.filter(
-      (id) => id.toString() !== productId
-    );
-    await user.save();
+    const favorites = await Favorite.find({ username });
 
-    res.json({ message: "Removed from favorites", favorites: user.favorites });
+    res.status(200).json({
+      message: "✅ Favorites fetched successfully",
+      count: favorites.length,
+      favorites,
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-// ✅ Get all favorites
-export const getFavorites = async (req, res) => {
-  try {
-    const user = await User.findById(req.user.id).populate("favorites");
-    if (!user) return res.status(404).json({ message: "User not found" });
-
-    res.json(user.favorites);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("❌ Get favorites error:", error);
+    res
+      .status(500)
+      .json({ message: "Server error", error: error.message });
   }
 };

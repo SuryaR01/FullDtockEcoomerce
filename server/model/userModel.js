@@ -11,3 +11,8 @@ const UsersSchema = new mongoose.Schema({
 const Users = mongoose.model( "Users" , UsersSchema);
 
 export default Users;
+
+
+
+
+// checker ok

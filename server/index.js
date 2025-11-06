@@ -50,7 +50,7 @@ import bodyParser from "body-parser";
 import productRoute from "./routes/productRoute.js";
 import registerRoute from "./routes/registerRoute.js";
 import userRoute from "./routes/userRoute.js";
-import favoriteRoutes from "./routes/favoriteRoutes.js";
+import favoriteRoute from "./routes/favoriteRoutes.js";
 import authRoute from "./routes/registerRoute.js";
 
 
@@ -75,7 +75,7 @@ mongoose.connect(MONGOURL)
 app.use("/prd", productRoute);
 app.use("/userReg", registerRoute);
 app.use("/induser", userRoute);
-app.use("/api/favorites", favoriteRoutes);
+app.use("/api/favorites", favoriteRoute);
 app.use("/api/auth", authRoute);
 
 // --- Default Route ---
