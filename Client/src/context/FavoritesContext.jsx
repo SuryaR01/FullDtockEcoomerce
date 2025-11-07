@@ -25,7 +25,7 @@ export const FavoritesProvider = ({ children }) => {
       } else {
         setUser(null);
       }
-    } catch (err) {
+    } catch (err) { 
       console.error("❌ Error parsing user from localStorage:", err);
       localStorage.removeItem("user");
       setUser(null);

@@ -4,6 +4,7 @@ import { FaStar, FaRegStar, FaEye, FaShoppingCart } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useFavorites } from "../context/FavoritesContext";
 import toast from "react-hot-toast";
+import { useCart } from "../context/CartContext";
 
 const AllProducts = () => {
   const [products, setProducts] = useState([]);
@@ -12,6 +13,7 @@ const AllProducts = () => {
   const [currentUser, setCurrentUser] = useState(null);
 
   const { favorites, toggleFavorite } = useFavorites();
+  const {  toggleCart } = useCart();
 
   // ✅ Load logged-in user from localStorage
   useEffect(() => {
@@ -113,24 +115,18 @@ const AllProducts = () => {
             className="relative bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden group"
           >
             {/* Wishlist & View Buttons */}
-            <div className="absolute top-3 right-3 flex flex-col gap-2 z-10">
+            <div className="absolute top-68 right-6  flex flex-col gap-2 z-10">
               <button
                 onClick={() => toggleFavorite(product)}
-                className={`px-4 py-2 rounded transition ${
+                className={`px-3 backdrop-blur-2xl py-2 rounded transition hover:cursor-pointer border-cyan-600 border text-cyan-700  ${
                   isFavorite(product._id)
                     ? "bg-red-500 text-white"
-                    : "bg-gray-200"
+                    : "bg-transparent"
                 }`}
               >
                 {isFavorite(product._id) ? "❤️ Remove" : "🤍 Add"}
               </button>
 
-              <Link
-                to={`/product/${product._id}`}
-                className="bg-white p-2 rounded-full hover:bg-cyan-100 transition text-cyan-600 shadow"
-              >
-                <FaEye />
-              </Link>
             </div>
 
             {/* Product Image */}
@@ -143,7 +139,7 @@ const AllProducts = () => {
             </div>
 
             {/* Product Details */}
-            <div className="p-4 text-center">
+            <div className="p-4 text-start">
               <h3 className="font-semibold text-gray-800 mb-1 truncate">
                 {product.name}
               </h3>
@@ -152,7 +148,7 @@ const AllProducts = () => {
               </p>
 
               {/* ⭐ Rating */}
-              <div className="flex justify-center mb-2">
+              <div className="flex justify-start mb-2">
                 {Array(5)
                   .fill()
                   .map((_, i) =>
@@ -170,18 +166,25 @@ const AllProducts = () => {
 
               {/* 🛒 Buttons */}
               <div className="flex justify-center gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                <button
+                {/* <button
                   onClick={() => addToCart(product)}
-                  className="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition"
+                  className="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded-lg  gap-2 transition"
                 >
                   <FaShoppingCart /> Add to Cart
+                </button> */}
+
+                <button
+                  onClick={() => toggleCart(product)}
+                  className="px-5 py-1 bg-cyan-600 text-white rounded-md hover:bg-cyan-700 hover:cursor-pointer flex items-center gap-2.5"
+                >
+                  <FaShoppingCart />  Add to Cart
                 </button>
 
                 <Link
                   to={`/product/${product._id}`}
-                  className="border border-cyan-600 text-cyan-600 hover:bg-cyan-600 hover:text-white px-4 py-2 rounded-lg transition"
+                  className="border border-cyan-600 text-cyan-600 flex items-center gap-2.5 hover:bg-cyan-600 hover:text-white px-7 py-2 rounded-lg transition"
                 >
-                  View
+                 <FaEye />  View
                 </Link>
               </div>
             </div>

@@ -43,14 +43,17 @@ const ViewProduct = () => {
       {/* Breadcrumb */}
       <div className="text-sm text-gray-500 mb-6">
         <Link to="/" className="hover:text-red-500">
-          Account
+          Home
+        </Link>{" "}
+        /{" "}
+        <Link to="/allproduct" className="hover:text-red-500">
+          All Products
         </Link>{" "}
         /{" "}
         <span className="hover:text-red-500 cursor-pointer">
           {product.category}
         </span>{" "}
-        /{" "}
-        <span className="text-black font-medium">{product.name}</span>
+        / <span className="text-black font-medium">{product.name}</span>
       </div>
 
       <div className="flex flex-col lg:flex-row gap-12">
@@ -94,10 +97,10 @@ const ViewProduct = () => {
 
           {/* Price */}
           <p className="text-2xl font-bold mb-4 text-red-400">
-           {/* ₹{totalPrice.toFixed(2)} */}
-           ₹  <span className="text-cyan-600">{product.price.toFixed(2)} </span> ONLY
+            {/* ₹{totalPrice.toFixed(2)} */}₹{" "}
+            <span className="text-cyan-600">{product.price.toFixed(2)} </span>{" "}
+            ONLY
           </p>
-         
 
           {/* Description */}
           <p className="text-gray-600 mb-6 leading-relaxed">
@@ -106,7 +109,7 @@ const ViewProduct = () => {
 
           {/* dynamic price */}
           <p className="text-xl font-bold text-gray-800 mb-4">
-           ₹ {totalPrice.toFixed(2)}
+            ₹ {totalPrice.toFixed(2)}
           </p>
 
           {/* Quantity and Buttons */}

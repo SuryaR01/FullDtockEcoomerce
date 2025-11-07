@@ -8,6 +8,8 @@ import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 import { FaStar, FaHeart, FaEye } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useCart } from "../context/CartContext";
+import { useFavorites } from "../context/FavoritesContext";
 
 const FlashSaleProduct = () => {
   const [products, setProducts] = useState([]);
@@ -17,6 +19,9 @@ const FlashSaleProduct = () => {
     minutes: 59,
     seconds: 50,
   });
+const { toggleCart } = useCart();
+ const { favorites, toggleFavorite } = useFavorites();
+  
 
   // Countdown Timer
   useEffect(() => {
@@ -99,16 +104,16 @@ const FlashSaleProduct = () => {
       >
         {products.map((product) => (
           <SwiperSlide key={product._id}>
-            <Link to={`/product/${product._id}`}>
+            <Link >
             <div className="border rounded-lg overflow-hidden bg-gray-50 hover:shadow-lg transition-all duration-300 relative group">
               {/* Wishlist + View */}
               <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition">
-                <button className="bg-white p-2 rounded-full shadow hover:text-red-500">
+                <button onClick={() => toggleFavorite(product)} className="bg-white text-cyan-500 p-2 rounded-full shadow hover:text-red-500">
                   <FaHeart />
                 </button>
-                <button className="bg-white p-2 rounded-full shadow hover:text-blue-500">
+                <Link to={`/product/${product._id}`} className="bg-white text-cyan-500 p-2 rounded-full shadow hover:text-blue-500">
                   <FaEye />
-                </button>
+                </Link>
               </div>
 
               {/* Product Image */}
@@ -162,9 +167,10 @@ const FlashSaleProduct = () => {
 
                 {/* Button */}
                 <button
+                onClick={() => toggleCart(product)}
                   className={`w-full py-2 rounded-md text-white font-semibold shadow ${
                     product.stock > 0
-                      ? "bg-cyan-500 hover:bg-cyan-800"
+                      ? "bg-cyan-600 hover:bg-cyan-800"
                       : "bg-gray-400 cursor-not-allowed"
                   }`}
                   disabled={product.stock <= 0}
@@ -180,9 +186,9 @@ const FlashSaleProduct = () => {
 
       {/* VIEW ALL */}
       <div className="flex justify-center mt-8">
-        <button className="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-8 rounded-md shadow">
+        <Link to={"/allproduct"} className="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-8 rounded-md shadow">
           View All Products
-        </button>
+        </Link>
       </div>
     </div>
   );

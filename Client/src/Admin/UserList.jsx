@@ -86,7 +86,7 @@ const UserList = () => {
         flex: 1.5,
       },
       {
-        headerName: "Password",
+        headerName: "User_ID",
         field: "_id",
         sortable: true,
         filter: "agTextColumnFilter",
