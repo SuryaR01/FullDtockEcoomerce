@@ -14,6 +14,7 @@ import { themeQuartz } from "ag-grid-community";
 import { useRef } from "react";
 import { useMemo } from "react";
 import { ModuleRegistry, AllCommunityModule } from "ag-grid-community";
+import { Button } from "@/components/ui/button";
 
 const myTheme = themeQuartz.withParams({
   spacing: 5,
@@ -60,10 +61,10 @@ const AdProduct = () => {
             src={params.value}
             alt="Product"
             style={{
-              width: "45px",
-              height: "45px",
+              width: "55px",
+              height: "55px",
               borderRadius: "8px",
-              objectFit: "cover",
+              objectFit: "fit",
             }}
           />
         ),
@@ -73,7 +74,7 @@ const AdProduct = () => {
       {
         headerName: "Price",
         field: "price",
-        valueFormatter: (p) => `₹${p.value}`,
+        valueFormatter: (p) => `₹ ${p.value}`,
         filter: "agNumberColumnFilter",
       },
       { headerName: "Category", field: "category", filter: true },
@@ -98,7 +99,7 @@ const AdProduct = () => {
               <FaEdit />
             </button>
             <button
-              onClick={() => handleDelete(params.data._id)}
+              onClick={() => confirmDelete(params.data._id)}
               className="border p-2 rounded-sm text-red-500 hover:bg-red-50"
             >
               <MdDelete />
@@ -116,6 +117,11 @@ const AdProduct = () => {
       resizable: true,
       filter: true,
       floatingFilter: true,
+      cellStyle: {
+        display : "flex" , 
+        justifyContent : "center",
+        alignItems : "center"
+      }
     }),
     []
   );
@@ -161,7 +167,7 @@ const AdProduct = () => {
       Navigate("/admin/products");
     } catch (error) {
       console.error("❌ Error adding product:", error.response?.data);
-      toast.error(error.response?.data?.message || "Failed to add product");
+      // toast.error(error.response?.data?.message || "Failed to add product");
     }
   };
 
@@ -234,6 +240,35 @@ const AdProduct = () => {
     }
   };
 
+  const confirmDelete = (id) => {
+    toast((t) => (
+      <div className="flex flex-col gap-3">
+        <span className="font-semibold text-gray-800">
+          Are you sure you want to delete this product?
+        </span>
+        <div className="flex gap-3 justify-end">
+          <Button
+            variant="outline"
+            onClick={() => toast.dismiss(t.id)}
+            className="text-gray-600 border-gray-300"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="destructive"
+            onClick={() => {
+              handleDelete(id);
+              toast.dismiss(t.id);
+            }}
+          >
+            Delete
+          </Button>
+        </div>
+      </div>
+    ));
+  };
+
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       {/* Header */}
@@ -272,9 +307,11 @@ const AdProduct = () => {
                 animateRows={true}
                 pagination={true}
                 paginationPageSize={20}
+                rowHeight={65}
                 enableRangeSelection={true}
               />
             </div>
+            
 
             {/* ✅ Edit Form Modal */}
             {editingProduct && (
@@ -474,19 +511,7 @@ const AdProduct = () => {
                         />
                       </div>
 
-                      {/* <div>
-                        <label className="block text-gray-700 font-semibold mb-2">
-                          Category
-                        </label>
-                        <input
-                          type="text"
-                          name="category"
-                          value={product.category}
-                          onChange={inputHandler}
-                          placeholder="Enter category"
-                          className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-400 outline-none"
-                        />
-                      </div> */}
+                     
 
                       <div>
                         <label className="block text-sm font-medium text-gray-600 mb-1">

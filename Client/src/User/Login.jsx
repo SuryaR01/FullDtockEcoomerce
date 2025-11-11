@@ -11,22 +11,22 @@ const Login = () => {
     name: "",
     email: "",
     password: "",
-    role: "user", // default role
+    role: "user",
   });
 
   const navigate = useNavigate();
 
-  // Handle input change
+  
   const inputHandler = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
 
-  // Handle form submit
+  
   const submitHandler = async (e) => {
     e.preventDefault();
 
     try {
-      // ✅ Allow only one specific admin
+      
       const ADMIN_EMAIL = "surya@treaders.com"; 
       const ADMIN_PASSWORD = "password@2002";
 
@@ -36,7 +36,7 @@ const Login = () => {
           return;
         }
 
-        // toast.success("Admin login successful!");
+     
 
         localStorage.setItem(
           "user",
@@ -51,7 +51,7 @@ const Login = () => {
         return;
       }
 
-      // ✅ For inducer and normal user → send request to backend
+      
       const res = await axios.post("http://localhost:8000/api/auth/login", {
         username: user.name,
         email: user.email,
@@ -71,7 +71,7 @@ const Login = () => {
         })
       );
 
-      // ✅ Redirect based on role
+      // Redirect based on role
       setTimeout(() => {
         if (user.role === "inducer") navigate("/");
         else navigate("/admin");

@@ -22,7 +22,7 @@ import express from "express";
 import jwt from "jsonwebtoken";
 import UserList from "../model/registerModel.js"
 import authMiddleware from "../authMiddleware.js"
-import {createLoginUser, deleteloginUser, getAllLoginUsers, getLoginUserById, updateloginUser } from "../controller/userController.js"
+import {createLoginUser, deleteloginUser, getAllLoginUsers, getCurrentUser, getLoginUserById, updateloginUser } from "../controller/userController.js"
 
 const router = express.Router();
 
@@ -51,5 +51,7 @@ router.get("/userListsAll", getAllLoginUsers);      // 📄 Get all userLists
 router.get("/userListsById/:id", getLoginUserById); // 🔍 Get single userList by ID
 router.put("/userListsUpdate/:id", updateloginUser);    // ✏️ Update userList
 router.delete("/userListsDelete/:id", deleteloginUser); // ❌ Delete userList
+
+router.get("/me/current", getCurrentUser);
 
 export default router;

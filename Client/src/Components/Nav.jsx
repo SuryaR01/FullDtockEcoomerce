@@ -40,7 +40,7 @@ const Navbar = () => {
     console.error("Error parsing user data:", error);
   }
 
-  // ✅ Logout Function
+  // Logout Function
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("user");
@@ -48,7 +48,7 @@ const Navbar = () => {
     navigate("/userlogin");
   };
 
-  // ✅ Extract first letter of email or username
+  // Extract first letter of email or username
   const firstLetter =
     user?.username?.charAt(0)?.toUpperCase() ||
     user?.userName?.charAt(0)?.toUpperCase() ||
@@ -68,28 +68,51 @@ const Navbar = () => {
         </Link>
 
         {/* ================= CENTER: SEARCH BAR ================= */}
-        <div className="hidden md:flex items-center bg-cyan-50 rounded-md px-3 py-1 w-1/2">
-          <FaSearch className="text-gray-400 text-lg mr-2" />
-          <input
-            type="text"
-            placeholder="Search for Products, Brands and More"
-            className="w-full bg-transparent outline-none text-gray-700 placeholder-gray-400"
-          />
+        <div className="hidden md:flex items-center justify-between  rounded-md px-4 py-2 w-1/2  mx-auto">
+          <ul className="flex items-center space-x-8 text-gray-700 font-bold">
+            <li>
+              <Link to="/" className="hover:text-cyan-600">
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link to="/allproduct" className="hover:text-cyan-600">
+                Products
+              </Link>
+            </li>
+            <li>
+              <Link to="/contact" className="hover:text-cyan-600">
+                Contact
+              </Link>
+            </li>
+            <li>
+              <Link to="/orderhistory" className="hover:text-cyan-600">
+                Order History
+              </Link>
+            </li>
+          </ul>
+
+          <div className="flex items-center bg-white rounded-full px-3 py-1 shadow-sm w-[45%]">
+            <FaSearch className="text-gray-400 text-lg mr-2" />
+            <input
+              type="text"
+              placeholder="Search for Products, Brands and More"
+              className="w-full bg-transparent outline-none text-gray-700 placeholder-gray-400"
+            />
+          </div>
         </div>
 
         {/* ================= RIGHT SECTION ================= */}
         <div className="hidden md:flex items-center space-x-8 text-gray-700 font-medium">
-          {/* ✅ Admin Dashboard Link */}
-          {user?.role === "admin" && (
+          {/* {user?.role === "admin" && (
             <Link
               to="/admin"
               className="flex items-center gap-2 text-cyan-600 font-semibold hover:text-cyan-700"
             >
               <FaUserShield /> Dashboard
             </Link>
-          )}
+          )} */}
 
-          {/* ✅ User Avatar / Login Button */}
           <div
             className="relative"
             onMouseEnter={() => setShowLoginMenu(true)}
@@ -104,7 +127,6 @@ const Navbar = () => {
               </Link>
             ) : (
               <div className="flex items-center gap-3 cursor-pointer">
-                {/* ✅ First Letter Avatar */}
                 <div className="w-8 h-8 flex items-center justify-center rounded-full bg-cyan-600 text-white font-bold">
                   {firstLetter}
                 </div>
@@ -114,7 +136,6 @@ const Navbar = () => {
               </div>
             )}
 
-            {/* ✅ Dropdown Menu */}
             {showLoginMenu && user && (
               <div className="absolute right-0 w-56 bg-white rounded-md shadow-lg border z-50">
                 <ul className="text-gray-700 text-sm">
@@ -143,8 +164,7 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* ✅ CART Drawer */}
-          {/* <Sheet open={openCart} onOpenChange={setOpenCart}>
+          <Sheet open={openCart} onOpenChange={setOpenCart}>
             <SheetTrigger asChild>
               <button
                 onClick={() => setOpenCart(true)}
@@ -153,11 +173,13 @@ const Navbar = () => {
                 <FaShoppingCart /> Cart ({cart.length})
               </button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-96">
+
+            <SheetContent side="right" className="w-96 flex flex-col">
               <SheetHeader>
                 <SheetTitle className="text-cyan-600">Your Cart 🛒</SheetTitle>
               </SheetHeader>
-              <div className="mt-6 space-y-4">
+
+              <div className="mt-6 flex-1 overflow-y-auto space-y-4 pr-2">
                 {cart.length === 0 ? (
                   <p className="text-gray-500 text-center">
                     No items in your cart!
@@ -194,80 +216,23 @@ const Navbar = () => {
                   ))
                 )}
               </div>
+
+              {cart.length > 0 && (
+                <div className="mt-4 border-t pt-4 mb-3 flex justify-center">
+                  <button
+                    onClick={() => {
+                      setOpenCart(false);
+                      navigate("/checkout");
+                    }}
+                    className="w-fit bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-2 px-15 rounded-md transition"
+                  >
+                    Move to CheckOut
+                  </button>
+                </div>
+              )}
             </SheetContent>
-          </Sheet> */}
+          </Sheet>
 
-          <Sheet open={openCart} onOpenChange={setOpenCart}>
-  <SheetTrigger asChild>
-    <button
-      onClick={() => setOpenCart(true)}
-      className="flex items-center gap-2 hover:text-cyan-600"
-    >
-      <FaShoppingCart /> Cart ({cart.length})
-    </button>
-  </SheetTrigger>
-
-  <SheetContent side="right" className="w-96 flex flex-col">
-    <SheetHeader>
-      <SheetTitle className="text-cyan-600">Your Cart 🛒</SheetTitle>
-    </SheetHeader>
-
-  
-    <div className="mt-6 flex-1 overflow-y-auto space-y-4 pr-2">
-      {cart.length === 0 ? (
-        <p className="text-gray-500 text-center">No items in your cart!</p>
-      ) : (
-        cart.map((item) => (
-          <div
-            key={item._id}
-            className="flex items-center gap-4 bg-gray-50 p-3 rounded-lg shadow-sm"
-          >
-            <img
-              src={item.product.image}
-              alt={item.product.name}
-              className="w-16 h-16 object-cover rounded-md"
-            />
-            <div className="flex-1">
-              <h4 className="font-semibold text-gray-800">
-                {item.product.name}
-              </h4>
-              <p className="text-cyan-600 font-medium">
-                ₹{item.product.price}
-              </p>
-              <p className="text-sm text-gray-500">
-                Qty: {item.product.quantity || 1}
-              </p>
-            </div>
-            <button
-              onClick={() => toggleCart(item.product)}
-              className="text-red-500 hover:text-red-600"
-            >
-              <FaTrash />
-            </button>
-          </div>
-        ))
-      )}
-    </div>
-
-    {cart.length > 0 && (
-      <div className="mt-4 border-t pt-4 mb-3 flex justify-center">
-        <button
-          onClick={() => {
-            setOpenCart(false);
-            navigate("/checkout"); 
-          }}
-          className="w-fit bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-2 px-15 rounded-md transition"
-        >
-          Move to CheckOut
-        </button>
-      </div>
-    )}
-  </SheetContent>
-</Sheet>
-
-
-
-          {/* ✅ FAVORITES Drawer */}
           <Sheet open={openFavorites} onOpenChange={setOpenFavorites}>
             <SheetTrigger asChild>
               <button
@@ -291,7 +256,6 @@ const Navbar = () => {
                   </p>
                 ) : (
                   favorites.map((item) => {
-                    // ✅ Support both structures (old and new)
                     const product = item.product || item;
 
                     return (
@@ -315,8 +279,8 @@ const Navbar = () => {
                             ${product?.price || "N/A"}
                           </p>
                         </div>
-                         <button
-                           onClick={() => toggleCart(product)}
+                        <button
+                          onClick={() => toggleCart(product)}
                           className="text-green-500 hover:text-red-600"
                         >
                           <IoCartOutline />
@@ -335,7 +299,6 @@ const Navbar = () => {
             </SheetContent>
           </Sheet>
 
-          {/* Menu Icon */}
           <button className="text-xl hover:text-cyan-600">
             <FaEllipsisV />
           </button>
@@ -368,7 +331,7 @@ const Navbar = () => {
                   </li>
                 )}
                 <li>
-                  <Link to="/products" className="block hover:text-cyan-600">
+                  <Link to="/allproduct" className="block hover:text-cyan-600">
                     Products
                   </Link>
                 </li>
@@ -378,6 +341,15 @@ const Navbar = () => {
                     className="flex items-center gap-2 hover:text-cyan-600"
                   >
                     <FaShoppingCart /> Cart
+                  </button>
+                </li>
+
+                <li>
+                  <button
+                    onClick={() => setOpenFavorites(true)}
+                    className="flex items-center gap-2 hover:text-cyan-600"
+                  >
+                    <FaHeart /> fav
                   </button>
                 </li>
                 <li>

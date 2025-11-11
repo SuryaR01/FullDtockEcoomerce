@@ -59,7 +59,7 @@ const AdminLayout = () => {
             variant="destructive"
             className="flex items-center gap-2 mt-auto border px-3 justify-center bg-red-500 text-white py-2 rounded-xl"
           >
-            <LogOut className="w-4 h-4" /> Logout
+            <LogOut className="w-4 h-4" /> Home
           </Link>
         </div>
       </aside>

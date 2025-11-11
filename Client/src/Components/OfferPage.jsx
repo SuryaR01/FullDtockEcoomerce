@@ -12,7 +12,6 @@ const OfferPage = () => {
     seconds: 0,
   });
 
-  // Timer Logic
   useEffect(() => {
     const timer = setInterval(() => {
       const now = new Date().getTime();
@@ -37,30 +36,35 @@ const OfferPage = () => {
   }, []);
 
   return (
-    <div className="relative w-full h-[80vh] flex items-center justify-center text-white overflow-hidden">
-      {/* Background Image */}
+    <div className="relative w-full h-[90vh] flex flex-col md:flex-row items-center justify-center text-white overflow-hidden">
+      {/* 🖼️ New Background Image */}
       <div
-        className="absolute inset-0 bg-cover bg-center brightness-50"
+        className="absolute inset-0 bg-cover bg-center brightness-60"
         style={{
           backgroundImage:
-            "url('https://devrims.com/blog/wp-content/uploads/2024/08/ecommerce-product-images-BLOG.jpg')",
+            "url('https://images.unsplash.com/photo-1616423032374-9b9cb37a6822?auto=format&fit=crop&w=1400&q=80')",
         }}
       ></div>
 
-      {/* Optional Dark Overlay for extra contrast */}
-      <div className="absolute inset-0 bg-black/40"></div>
+      {/* 🎨 Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent"></div>
 
-      {/* Content */}
-      <div className="relative z-10 text-center px-6 md:px-20">
-        <h4 className="text-green-400 font-semibold uppercase mb-2">
-          Categories
+      {/* 🧱 Left Section */}
+      <div className="relative z-10 w-full md:w-1/2 px-10 md:px-20 text-center md:text-left space-y-6">
+        <h4 className="text-green-400 font-semibold uppercase tracking-wide">
+          Limited Time Offer
         </h4>
-        <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-8 drop-shadow-lg">
-          Enhance Your <br /> Music Experience
+        <h1 className="text-4xl md:text-5xl font-extrabold leading-tight drop-shadow-lg">
+          Up to <span className="text-green-400">50% OFF</span> <br /> on
+          Premium Headphones 🎧
         </h1>
+        <p className="text-gray-300 text-base md:text-lg">
+          Experience crystal-clear sound with our top-rated headphones. Hurry!
+          Offer ends soon.
+        </p>
 
         {/* Countdown */}
-        <div className="flex flex-wrap justify-center gap-4 mb-8">
+        <div className="flex flex-wrap justify-center md:justify-start gap-4 mt-6">
           {[
             { label: "Days", value: timeLeft.days },
             { label: "Hours", value: timeLeft.hours },
@@ -69,18 +73,27 @@ const OfferPage = () => {
           ].map((item, index) => (
             <div
               key={index}
-              className="bg-white text-black rounded-full w-24 h-24 flex flex-col items-center justify-center shadow-md"
+              className="bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-xl w-20 h-20 flex flex-col items-center justify-center shadow-md"
             >
-              <p className="text-3xl font-bold">{item.value}</p>
-              <p className="text-xs uppercase">{item.label}</p>
+              <p className="text-2xl font-bold">{item.value}</p>
+              <p className="text-xs uppercase tracking-wider">{item.label}</p>
             </div>
           ))}
         </div>
 
-        {/* Button */}
-        <button className="bg-green-500 hover:bg-green-600 text-white px-10 py-4 rounded-lg font-semibold shadow-md transition-all duration-200">
-          Buy Now!
+        {/* CTA Button */}
+        <button className="mt-8 bg-green-500 hover:bg-green-600 text-white px-10 py-4 rounded-lg font-semibold shadow-lg transition-transform transform hover:scale-105">
+          Shop Now
         </button>
+      </div>
+
+      {/* 🎧 Product Image Side */}
+      <div className="relative z-10 w-full md:w-1/2 flex justify-center mt-10 md:mt-0">
+        <img
+          src="https://pngimg.com/uploads/headphones/headphones_PNG7641.png"
+          alt="Headphones"
+          className="w-[300px] md:w-[400px] drop-shadow-2xl animate-pulse-slow"
+        />
       </div>
     </div>
   );

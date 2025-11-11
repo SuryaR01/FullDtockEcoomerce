@@ -27,6 +27,8 @@ import { CheckoutProvider } from "./context/CheckoutContext.jsx";
 import Checkout from "./Product/Checkout.jsx";
 import PayMent from "./Product/PayMent.jsx";
 import OrderHistory from "./Product/orderHistry.jsx";
+import MyProfile from "./User/MyProfile.jsx";
+import ScrollToTop from "./Components/ScrollToTop.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -36,6 +38,7 @@ createRoot(document.getElementById("root")).render(
           <FavoritesProvider>
             <BrowserRouter>
               <Toaster position="top-right" />
+              <ScrollToTop />
               <Routes>
                 <Route path="/" element={<App />}>
                   <Route path="/" element={<Home />} />
@@ -44,8 +47,9 @@ createRoot(document.getElementById("root")).render(
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/checkout" element={<Checkout />} />
                   <Route path="/payment" element={<PayMent />} />
-                  <Route path="/orderhistory" element={< OrderHistory />} />
-                </Route> 
+                  <Route path="/orderhistory" element={<OrderHistory />} />
+                  <Route path="/profile" element={<MyProfile />} />
+                </Route>
 
                 <Route path="/product" element={<Product />} />
                 <Route path="/category/:id" element={<Category />} />

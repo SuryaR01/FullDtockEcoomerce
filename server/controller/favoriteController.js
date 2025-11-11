@@ -58,45 +58,7 @@ export const addFavorite = async (req, res) => {
   }
 };
 
-// export const addFavorite = async (req, res) => {
-//   try {
-//     const { username, productId, name, price, category, description, image, stock } = req.body;
 
-//     if (!username) {
-//       return res.status(400).json({ message: "Username is required" });
-//     }
-
-//     if (!productId) {
-//       return res.status(400).json({ message: "Product ID is missing or invalid" });
-//     }
-
-//     // ✅ Check if already exists
-//     const existing = await Favorite.findOne({ username, productId });
-//     if (existing) {
-//       return res.status(200).json({ message: "Already in favorites" });
-//     }
-
-//     // ✅ Create new favorite entry with full product snapshot
-//     const fav = new Favorite({
-//       username,
-//       productId,
-//       product: { name, price, category, description, image, stock },
-//     });
-
-//     await fav.save();
-//     res.status(201).json({ message: "✅ Added to favorites", fav });
-//   } catch (error) {
-//     console.error("❌ Favorite add error:", error);
-//     res.status(500).json({ message: "Server error", error: error.message });
-//   }
-// };
-
-
-
-
-/**
- * ✅ Remove Product from Favorites (by username + productId)
- */
 export const removeFromFavorites = async (req, res) => {
   try {
     const { username, productId } = req.body;

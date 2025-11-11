@@ -50,30 +50,3 @@ app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PO
 
 
 
-// //history method=========================================
-
-// const orderSchema = new mongoose.Schema({
-//   orderId: String,
-//   userEmail: String,
-//   products: Array,
-//   totalAmount: Number,
-//   paymentStatus: String,
-//   paymentId: String,
-//   shippingAddress: Object,
-//   createdAt: { type: Date, default: Date.now },
-// });
-
-// const Order = mongoose.model("Order", orderSchema);
-
-// // ✅ POST route to store order
-// app.post("/api/orders", async (req, res) => {
-//   try {
-//     const order = new Order(req.body);
-//     await order.save();
-//     res.json({ success: true, message: "Order saved successfully!" });
-//   } catch (err) {
-//     res.status(500).json({ success: false, message: err.message });
-//   }
-// });
-
-// app.listen(5000, () => console.log("✅ Server running on port 5000"));
